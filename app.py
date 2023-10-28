@@ -43,6 +43,7 @@ def play_sound(file_path, volume=20.0):
         pygame.time.Clock().tick(10)
 
 def delivery_unlock_sequence():
+    # サーボモーターを一連の動作で宅配解錠
     set_servo_angle(60)
     time.sleep(0.5)
     set_servo_angle(90)
@@ -54,6 +55,7 @@ def delivery_unlock_sequence():
     time.sleep(1)
 
 def homecoming_unlock_sequence():
+    # サーボモーターを一連の動作で帰宅解錠
     set_servo_angle(60)
     time.sleep(0.5)
     set_servo_angle(90)
@@ -91,12 +93,15 @@ def callback():
 def handle_message(event):
     text = event.message.text
     if text in ['宅配']:
+        # '宅配'メッセージを受けた場合、宅配解錠シーケンスを実行
         delivery_unlock_sequence()
         response_message = random.choice(DELIVERY_MESSAGES)
     elif text in ['ただいまー', '帰ったよー', '鍵開けてー', 'ただいま']:
+        # 帰宅メッセージを受けた場合、帰宅解錠シーケンスを実行
         homecoming_unlock_sequence()
         response_message = random.choice(HOMECOMING_MESSAGES)
     else:
+        # その他のメッセージはそのまま応答
         response_message = text
     line_bot_api.reply_message(event.reply_token, TextSendMessage(response_message))
 
